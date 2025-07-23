@@ -15,6 +15,7 @@ import ai.koog.prompt.executor.clients.openai.OpenAIModels
 import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
 import ai.koog.prompt.structure.markdown.MarkdownStructuredDataDefinition
 import com.interview.interviewai.CalculatorTools
+import com.interview.interviewai.config.AppConfig
 import com.interview.interviewai.prompt.QUESTION_GENERATION_PROMPT
 import com.interview.interviewai.formatOutput
 import com.interview.interviewai.model.Question
@@ -26,7 +27,8 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("question")
 class QuestionController(
-    private val questionService: QuestionService
+    private val questionService: QuestionService,
+    private val appConfig: AppConfig,
 ) {
 
     @GetMapping("")
@@ -67,7 +69,7 @@ class QuestionController(
 
 
         val agent = AIAgent(
-            executor = simpleOpenAIExecutor(apiKey),
+            executor = simpleOpenAIExecutor(appConfig.openApiKey),
             systemPrompt = QUESTION_GENERATION_PROMPT,
             llmModel = OpenAIModels.Reasoning.GPT4oMini,
             strategy = agentStrategy

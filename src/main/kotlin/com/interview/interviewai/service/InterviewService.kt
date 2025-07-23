@@ -3,6 +3,7 @@ package com.interview.interviewai.service
 import ai.koog.agents.core.agent.AIAgent
 import ai.koog.prompt.executor.clients.openai.OpenAIModels
 import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
+import com.interview.interviewai.config.AppConfig
 import com.interview.interviewai.model.InterviewState
 import com.interview.interviewai.model.MessageRequest
 import com.interview.interviewai.model.MessageResponse
@@ -12,11 +13,10 @@ import java.util.concurrent.ConcurrentHashMap
 
 @Service
 class InterviewService(
-//    @Value("\${openai.api-key}") private val apiKey: String
 
+    private val appConfig: AppConfig,
 ) {
     private val sessionStates = ConcurrentHashMap<String, InterviewState>()
-    private val apiKey = ""
 
 
     private fun getOrCreateState(sessionId: String): InterviewState {
@@ -51,7 +51,7 @@ Context:
 """.trimIndent()
 
         val agent = AIAgent(
-            executor = simpleOpenAIExecutor(apiKey),
+            executor = simpleOpenAIExecutor(appConfig.openApiKey),
             systemPrompt = systemPrompt,
             llmModel = OpenAIModels.Reasoning.GPT4oMini
         )

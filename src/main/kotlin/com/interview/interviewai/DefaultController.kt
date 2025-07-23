@@ -12,23 +12,28 @@ import ai.koog.agents.features.eventHandler.feature.EventHandler
 import ai.koog.prompt.dsl.Prompt
 import ai.koog.prompt.executor.clients.openai.OpenAIModels
 import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
+import com.interview.interviewai.config.AppConfig
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("default")
-class DefaultController {
+class DefaultController(
+    private val appConfig: AppConfig,
+) {
+
+
 
     @GetMapping("tool-registration-demo")
     suspend fun getDemo(): String? {
 
-        val apiKey = System.getenv("OPEN_API_KEY")
 
         val agent = AIAgent(
-            executor = simpleOpenAIExecutor(apiKey),
+            executor = simpleOpenAIExecutor(appConfig.openApiKey),
             systemPrompt = "You are a helpful assistant. Answer user questions concisely.",
-            llmModel = OpenAIModels.Chat.GPT4o,
+            llmModel = OpenAIModels.CostOptimized.O4Mini,
             temperature = 0.7,
             toolRegistry = ToolRegistry {
                 tool(SayToUser)
@@ -46,9 +51,8 @@ class DefaultController {
     @GetMapping("node-edge-demo")
     suspend fun nodeEdgeDemo() : String? {
 
-        val apiKey = System.getenv("OPEN_API_KEY")
 
-        val promptExecutor = simpleOpenAIExecutor(apiKey)
+        val promptExecutor = simpleOpenAIExecutor(appConfig.openApiKey)
 
         val agentStrategy = strategy("Simple calculator") {
             val nodeSendInput by nodeLLMRequest()

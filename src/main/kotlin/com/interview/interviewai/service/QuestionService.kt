@@ -5,16 +5,17 @@ import ai.koog.prompt.executor.clients.openai.OpenAIModels
 import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.interview.interviewai.config.AppConfig
 import com.interview.interviewai.model.Question
 import com.interview.interviewai.prompt.QUESTION_GENERATION_PROMPT
 import org.springframework.stereotype.Service
 
 @Service
 class QuestionService(
-    private val interviewService: InterviewService
+    private val interviewService: InterviewService,
+    private val appConfig: AppConfig
 ) {
 
-    private val apiKey = ""
 
     private val objectMapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
 
@@ -22,7 +23,7 @@ class QuestionService(
         println("generateQuestion")
 
         val agent = AIAgent(
-            executor = simpleOpenAIExecutor(apiKey),
+            executor = simpleOpenAIExecutor(appConfig.openApiKey),
             systemPrompt = QUESTION_GENERATION_PROMPT,
             llmModel = OpenAIModels.Reasoning.GPT4oMini
         )
