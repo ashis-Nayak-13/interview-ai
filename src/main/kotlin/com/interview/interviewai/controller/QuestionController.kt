@@ -41,7 +41,6 @@ class QuestionController(
     @GetMapping("1")
     suspend fun getQuestionStreaming() : String {
         println("starting question")
-        val apiKey =""// or Anthropic, Google, OpenRouter, etc.
 
         val agentStrategy = strategy("generate-question") {
             val getMdOutput by node<String, String> { input ->
@@ -118,7 +117,7 @@ class QuestionController(
             )
         }
 
-        }
+    }
 
 
     val agentConfig = AIAgentConfig.withSystemPrompt(
